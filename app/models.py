@@ -35,9 +35,9 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def generate_confirmation_token(self, expiration=3600):        
+    def generate_confirmation_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'])
-        return s.dumps({'confirm': self.id})        
+        return s.dumps({'confirm': self.id})
 
     def confirm(self, token):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -98,3 +98,12 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+class Disciplina(db.Model):
+    __tablename__ = 'disciplinas'
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(64), unique=True, index=True)
+    semestre = db.Column(db.String(32))
+
+    def __repr__(self):
+        return f'<Disciplina {self.nome}>'
